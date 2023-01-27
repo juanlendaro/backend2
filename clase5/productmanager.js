@@ -1,6 +1,6 @@
-const fs = require('fs')
+import fs from 'fs'
 
-class ProductManager {
+export class ProductManager {
     constructor(path) {
         this.products = []
         this.path = path
@@ -77,21 +77,20 @@ class ProductManager {
 }
 
 
-const productManager = new ProductManager('./clase5/products.json');
 
-productManager.addProduct({
-    title: "producto prueba",
-    description: "Este  es un producto prueba",
-    price: 200,
-    thumbnail: "Sin imagen",
-    code: 1,
-    stock: 25,
-})
-productManager.addProduct({
-    title: "producto prueba2",
-    description: "Este  es un segundo producto prueba",
-    price: 250,
-    thumbnail: "Sin imagen",
-    code: 2,
-    stock: 30,
-})
+// productManager.addProduct({
+//     title: "producto prueba",
+//     description: "Este  es un producto prueba",
+//     price: 200,
+//     thumbnail: "Sin imagen",
+//     code: 1,
+//     stock: 25,
+// })
+// productManager.addProduct({
+//     title: "producto prueba2",
+//     description: "Este  es un segundo producto prueba",
+//     price: 250,
+//     thumbnail: "Sin imagen",
+//     code: 2,
+//     stock: 30,
+// })
