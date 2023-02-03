@@ -1,16 +1,17 @@
 import fs from 'fs'
 
 export class ProductManager {
+    #path = './src/products.json'
     constructor(path) {
         this.products = []
-        this.path = path
+        this.path = this.#path
     }
 
 
     addProduct = async (newProduct) => {
-        if (newProduct.title === '' || newProduct.description === '' || newProduct.price === '' || newProduct.thumbnail === '' || newProduct.code === '' || newProduct.stock === '') {
-            return console.log(`Complete todos los campos por favor`)
-        }
+        // if (newProduct.title === '' || newProduct.description === '' || newProduct.price === '' || newProduct.thumbnail === '' || newProduct.code === '' || newProduct.stock === '') {
+        //     return console.log(`Complete todos los campos por favor`)
+        // }
         let productDb = await this.getProducts()
         const data = await productDb.find(product => product.code === newProduct.code)
         try {
