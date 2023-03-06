@@ -5,13 +5,16 @@ import handlebars from 'express-handlebars'
 import { Server } from 'socket.io'
 import viewsRouter from './routes/views.js'
 import __dirname from './utils.js'
-import { ProductManager } from '../productmanager.js'
-
+import { ProductManager } from './dao/fileSystem/productmanager.js'
+import dbConnection from './config/dbConnections.js'
+import chatModel from "./models/chat.js"
 
 
 
 const app = express()
 const PORT = 8080
+
+dbConnection()
 
 const productManager = new ProductManager()
 
@@ -29,23 +32,28 @@ app.use('/', viewsRouter)
 app.use('/api/products', productsRouter)
 app.use('/api/carts', cartsRouter)
 
+// iniciamos servidor
+
 const httpServer = app.listen(PORT, (err) => {
     if (err) console.log(err);
     console.log('Escuchando puerto: ', PORT);
 })
 
-
+// websockets
 httpServer.on
 
 const socketServer = new Server(httpServer)
 
 let productos
+let mensajes
 
 socketServer.on('connection', async socket => {
     console.log('Nuevo cliente conectado')
     try {
         productos = await productManager.getProducts()
+        mensajes = await chatModel.find()
         socket.emit('mensajeServer', productos)
+        socket.emit('mensajesChat', mensajes)
     } catch (error) {
         console.log(error)
     }
@@ -82,6 +90,17 @@ socketServer.on('connection', async socket => {
             await productManager.deleteProduct(data)
             let datos = await productManager.getProducts()
             socketServer.emit('productoEliminado', datos)
+        } catch (error) {
+            console.log(error)
+        }
+    })
+
+    socket.on('msg', async data => {
+        console.log(data);
+        try {
+            await chatModel.insertMany(data)
+            let datos = await chatModel.find()
+            socketServer.emit('newMsg', datos)
         } catch (error) {
             console.log(error)
         }

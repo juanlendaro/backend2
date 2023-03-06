@@ -1,69 +1,64 @@
 import { Router } from 'express'
-import { ProductManager } from './../../productmanager.js'
+import productsModel from "../models/products.js"
+import { MongoProductManager } from "../dao/mongoDB/mongoProductManager.js"
 
 const router = Router()
 
-const productManager = new ProductManager()
+const mongoProductManager = new MongoProductManager
 
 router.get('/', async (req, res) => {
     const { limit } = req.query
-
     try {
-        const data = await productManager.getProducts()
+        let data = await mongoProductManager.getProducts(limit)
 
-        limit ? res.send(data.slice(0, limit)) : res.send(data)
+        res.send(data)
     } catch (error) {
-        console.log(error);
+        console.log(error)
     }
 })
 
 router.get('/:pid', async (req, res) => {
     const { pid } = req.params
-
     try {
-        const data = await productManager.getProducts()
+        const allProducts = await mongoProductManager.getProducts()
+        const productById = await mongoProductManager.getProductById(pid)
 
-        pid ? res.send(data.slice(pid - 1, pid)) : res.send(data)
+        pid ? res.send(productById) : res.send(allProducts)
     } catch (error) {
-        console.log(error);
+        console.log(error)
     }
 })
 
 router.post('/', async (req, res) => {
-    const newItem = req.body
-    newItem.status = true
+    const { title, description, code, price, status, stock, category, thumbnail } = req.body
 
-    if (!newItem.title || !newItem.description || !newItem.price || !newItem.thumbnail || !newItem.code || !newItem.stock || !newItem.category) {
-        return res.send({ mensaje: 'Complete todos los campos' })
-    }
-    let productDb = await productManager.getProducts()
-    const data = await productDb.find(product => product.code === newItem.code)
-
-    if (data) {
-        res.send({ mensaje: 'El código de producto ya existe' })
+    if (title == '' || description == '' || code == '' || price == '' || status == '' || stock == '' || category == '') {
+        res.send({ aviso: "datos invalidos" })
     } else {
         try {
-            await productManager.addProduct(newItem)
-            res.send({ mensaje: 'Producto agregado' })
+            await mongoProductManager.addProduct(title, description, price, thumbnail, code, stock, status, category)
+
+            res.send({ aviso: "producto agregado" })
         } catch (error) {
-            console.log(error);
+            console.log(error)
         }
     }
 })
 
 router.put('/:pid', async (req, res) => {
     const { pid } = req.params
-    const newItem = req.body
+    const { title, description, code, price, status, stock, category, thumbnail } = req.body
 
-    if (!newItem.title || !newItem.description || !newItem.price || !newItem.thumbnail || !newItem.code || !newItem.stock || !newItem.category) {
-        res.send({ alerta: 'No puede dejar campos sin completar' })
+    if (title == undefined || description == undefined || code == undefined || price == undefined || status == undefined || stock == undefined || category == undefined) {
+        res.send({ mensaje: "datos invalidos" })
     } else {
-        const prod = newItem
+        let obj = { title, description, code, price, status, stock, category, thumbnail }
         try {
-            await productManager.updateProduct(pid, prod)
-            res.send({ mensaje: 'Producto actualizado' })
+            await mongoProductManager.updateProduct(pid, obj)
+
+            res.send({ aviso: "producto actualizado" })
         } catch (error) {
-            console.log(error);
+            console.log(error)
         }
     }
 })
@@ -72,10 +67,11 @@ router.delete('/:pid', async (req, res) => {
     const { pid } = req.params
 
     try {
-        await productManager.deleteProduct(pid)
-        res.send({ mensaje: 'Producto eliminado' })
+        await mongoProductManager.deleteProduct(pid)
+
+        res.send({ aviso: "producto eliminado" })
     } catch (error) {
-        console.log(error);
+        console.log(error)
     }
 })
 
