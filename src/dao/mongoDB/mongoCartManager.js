@@ -44,10 +44,48 @@ export class MongoCartManager {
         }
     }
 
-    async getCartProducts(cid) {
+    async getCartProducts(cid, limit, page) {
         try {
-            const cartProducts = await cartsModel.findOne({ _id: cid })
+            const cartProducts = await cartsModel.paginate({ _id: cid }, { limit: limit, page: page, lean: true })
+            console.log(cartProducts)
             return cartProducts
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    async deleteCartProducts(cid) {
+        try {
+            let products = []
+
+            await cartsModel.updateOne(
+                {
+                    _id: cid
+                },
+                {
+                    $set:
+                    {
+                        'products': products
+                    }
+                }
+            )
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async arrayProductsUpdate(cid, data) {
+        try {
+            await cartsModel.updateOne(
+                {
+                    _id: cid
+                },
+                {
+                    $set:
+                    {
+                        'products': data
+                    }
+                }
+            )
         } catch (error) {
             console.log(error)
         }

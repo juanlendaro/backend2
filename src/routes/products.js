@@ -7,11 +7,11 @@ const router = Router()
 const mongoProductManager = new MongoProductManager
 
 router.get('/', async (req, res) => {
-    const { limit } = req.query
+    const { limit, page = 1 } = req.query
     try {
         let data = await mongoProductManager.getProducts(limit)
 
-        res.send(data)
+        res.send(data.docs)
     } catch (error) {
         console.log(error)
     }
@@ -74,5 +74,6 @@ router.delete('/:pid', async (req, res) => {
         console.log(error)
     }
 })
+
 
 export default router
