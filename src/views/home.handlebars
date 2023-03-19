@@ -1,5 +1,11 @@
 <div>
     <h2>Todos los Productos</h2>
+
+    <h2>Bienvenido {{username}}</h2>
+
+    <form action="../auth/logout" method="post">
+        <button id="logout">Cerrar sesion</button>
+    </form>
     
     {{#each productos}}
         <div>
@@ -13,11 +19,15 @@
         </form>
     {{/each}}
 
-    {{#if hasPrevPage}}
-        <a href="/products?page={{prevPage}}&&limit={{limit}}"><button>Anterior</button></a>
-    {{/if}}
-    <p>{{page}}</p>
-    {{#if hasNextPage}}
-        <a href="/products?page={{nextPage}}&&limit={{limit}}"><button>Siguiente</button></a>
-    {{/if}}
+    <div>
+        {{#if hasPrevPage}}
+            <a href="/products?page={{prevPage}}&&limit={{limit}}"><button>Anterior</button></a>
+        {{/if}}
+        <p>{{page}}</p>
+        {{#if hasNextPage}}
+            <a href="/products?page={{nextPage}}&&limit={{limit}}"><button>Siguiente</button></a>
+        {{/if}}
+    </div>
 </div>
+
+<script src="../public/js/home.js"></script>
