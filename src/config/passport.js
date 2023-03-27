@@ -2,7 +2,7 @@ import passport from "passport";
 import GithubStrategy from 'passport-github2'
 import local from "passport-local"
 import { MongoUserManager } from "../dao/mongoDB/MongoUserManager.js";
-import { createHash, isValidPassword } from "../ultis/bcrypt.js";
+import { createHash, isValidPassword } from "../Utils/bcrypt.js";
 import UserModel from '../models/user.js'
 
 const LocalStrategy = local.Strategy
