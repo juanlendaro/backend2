@@ -25,9 +25,9 @@ export const initPassport = () => {
     })
 
     passport.use('github', new GithubStrategy({
-        clientID: 'Iv1.b6ac1a5f856717dc',
-        clientSecret: 'de3844f079b2117ee877294638dd6e0d6d5ef1b2',
-        callbackURL: 'http://localhost:8080/auth/githubcallback'
+        clientID: 'Iv1.1c69d9c201ddaadf',
+        clientSecret: '447cb6bd9a59b392f40a6b3f9b3a91454e3475ca',
+        callbackURL: 'http://localhost:8080/api/auth/githubcallback'
     }, async (accessToken, refreshToken, profile, done) => {
         console.log('accessToken: ', accessToken)
         console.log('refreshToken: ', refreshToken)
